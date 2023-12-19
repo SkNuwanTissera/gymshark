@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pack Size Calculator</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+  <h1>Pack Size Calculator</h1>
+
+  <h2>Calculate Packs for Quantity:</h2>
+  <input type="number" id="quantityInput" placeholder="Enter quantity">
+  <button onclick="calculatePacks()">Calculate</button>
+  <div id="packsResult"></div>
+    
+  <h2>Add Pack Size:</h2>
+  <input type="number" id="addSizeInput" placeholder="Enter size">
+  <button onclick="addPackSize()">Add</button>
+
+  <h2>Update Pack Size:</h2>
+  <input type="number" id="oldSizeInput" placeholder="Old size">
+  <input type="number" id="newSizeInput" placeholder="New size">
+  <button onclick="updatePackSize()">Update</button>
+
+  <h2>Delete Pack Size:</h2>
+  <input type="number" id="deleteSizeInput" placeholder="Enter size">
+  <button onclick="deletePackSize()">Delete</button>
+
+  <script>
+    const apiUrl = 'http://localhost:8080';
+
+    function calculatePacks() {
+      const quantity = $('#quantityInput').val();
+      if (!quantity || quantity <= 0) {
+        alert('Please enter a valid quantity.');
+        return;
+      }
+
+      $.get(`${apiUrl}/calculate/${quantity}`, function(data) {
+        $('#packsResult').text(JSON.stringify(data));
+      });
+    }
+
+    function addPackSize() {
+      const size = $('#addSizeInput').val();
+      if (!size || size <= 0) {
+        alert('Please enter a valid size.');
+        return;
+      }
+
+      $.post(`${apiUrl}/packs/${size}`, function(response) {
+        alert(response.message);
+      });
+    }
+
+    function updatePackSize() {
+      const oldSize = $('#oldSizeInput').val();
+      const newSize = $('#newSizeInput').val();
+      if (!oldSize || oldSize <= 0 || !newSize || newSize <= 0) {
+        alert('Please enter valid old and new sizes.');
+        return;
+      }
+
+      $.ajax({
+        url: `${apiUrl}/packs/${oldSize}/${newSize}`,
+        type: 'PUT',
+        success: function(response) {
+          alert(response.message);
+        },
+        error: function(xhr, status, error) {
+          alert(xhr.responseText);
+        }
+      });
+    }
+
+    function deletePackSize() {
+      const size = $('#deleteSizeInput').val();
+      if (!size || size <= 0) {
+        alert('Please enter a valid size.');
+        return;
+      }
+
+      $.ajax({
+        url: `${apiUrl}/packs/${size}`,
+        type: 'DELETE',
+        success: function(response) {
+          alert(response.message);
+        },
+        error: function(xhr, status, error) {
+          alert(xhr.responseText);
+        }
+      });
+    }
+  </script>
+</body>
+</html>

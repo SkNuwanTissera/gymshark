@@ -3,7 +3,6 @@ package packer
 import (
 	"context"
 	"errors"
-
 	"golang.org/x/exp/slog"
 )
 

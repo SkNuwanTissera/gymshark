@@ -10,5 +10,7 @@ WORKDIR /app
 COPY --from=builder /app/main .
 COPY --from=builder /app/start.sh .
 
+RUN chmod +x /app/main  # Set executable permissions
+
 EXPOSE 8080
-CMD [ "/app/main" ]
+CMD ["/app/main"]  # Update if main isnt the correct entry point
